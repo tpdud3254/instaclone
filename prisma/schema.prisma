@@ -6,17 +6,19 @@ generator client {
 }
 
 datasource db {
-  provider = "postgresql" //기본적으로 prisma는 postgreSQL을 사용해서 클라이언트와 데이터 소스를 생성해줄것ㅇ미
-  url      = env("DATABASE_URL") //env: 환경 변수
-  // .env 파일이 불투명한 이유는 gitignore에 포함되어 있기때문
-  // .env 파일 가보면 데이터베이스의 url과 비번 아이디 등등이 있어 노출되면 안되기 때문, 각 사용자의 환경 변수라 git에 올리면 안됨
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
 }
 
-model Movie {
-  id       Int      @id @default(autoincrement())
-  title    String
-  year     Int
-  genre    String? // ? : It's not required
-  createAt DateTime @default(now()) //DateTime:prisma가 기본적으로 제공하는 데이터타입, @default(now()) : 모델이 생성됐을 때 DB에 현재 시간을 추가하는것
-  updateAt DateTime @updatedAt
+model User {
+  id        Int      @id @default(autoincrement())
+  firstName String
+  lastName  String?
+  userName  String   @unique
+  email     String   @unique
+  password  String
+  bio       String?
+  avatar    String?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 }
