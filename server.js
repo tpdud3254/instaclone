@@ -26,7 +26,7 @@ import graphqlUploadExpress from "graphql-upload/graphqlUploadExpress.js";
 //     .then(() => console.log(`Server is running on http://localhost:${PORT}`));
 
 async function startServer() {
-    const server = new ApolloServer({
+    const apollo = new ApolloServer({
         typeDefs,
         resolvers,
         context: async ({ req }) => {
@@ -37,19 +37,19 @@ async function startServer() {
         csrfPrevention: true,
     });
 
-    await server.start();
+    await apollo.start();
 
+    //apllo server는 할수 있는게 제한적이라서 express server를 만들고 apollo server에 추가할거임
     const app = express();
 
-    // This middleware should be added before calling `applyMiddleware`.
     app.use(graphqlUploadExpress());
-
-    server.applyMiddleware({ app });
+    app.use("/static", express.static("uploads")); //uploads폴더를 인터넷에 올림
+    apollo.applyMiddleware({ app });
 
     await new Promise((r) => app.listen({ port: 4000 }, r));
 
     console.log(
-        `🚀 Server ready at http://localhost:4000${server.graphqlPath}`
+        `🚀 Server ready at http://localhost:4000${apollo.graphqlPath}`
     );
 }
 

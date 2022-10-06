@@ -16,13 +16,18 @@ const resolverFn = async (
     },
     { loggedInUser }
 ) => {
-    const { filename, createReadStream } = await avatar;
-    const readStream = createReadStream();
-    const writeStream = createWriteStream(
-        process.cwd() + "/uploads/" + filename
-    );
+    let avatarUrl = null;
+    if (avatar) {
+        const { filename, createReadStream } = await avatar;
+        const newFileName = `${loggedInUser.id}-${Date.now()}-${filename}`; //파일명을 유니크하게 만들어 주기 위해
+        const readStream = createReadStream();
+        const writeStream = createWriteStream(
+            process.cwd() + "/uploads/" + newFileName
+        );
 
-    readStream.pipe(writeStream);
+        readStream.pipe(writeStream);
+        avatarUrl = `http://localhost:4000/static/${newFileName}`;
+    }
 
     let hashedPassword = null;
     if (newPassword) {
@@ -40,6 +45,7 @@ const resolverFn = async (
             email,
             bio,
             ...(hashedPassword && { password: hashedPassword }),
+            ...(avatarUrl && { avatar: avatarUrl }),
         },
     });
 
