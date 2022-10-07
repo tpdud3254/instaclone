@@ -1,7 +1,7 @@
 import { createWriteStream } from "fs";
 import client from "../../client";
 import bcypt from "bcrypt";
-import { protectedResolver } from "../user.utils";
+import { protectedResolver } from "../users.utils";
 import GraphQLUpload from "graphql-upload/GraphQLUpload.js";
 const resolverFn = async (
     __,

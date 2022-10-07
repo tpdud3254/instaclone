@@ -2,7 +2,7 @@ require("dotenv").config();
 // import { ApolloServer } from "apollo-server";
 //const { ApolloServer, gql } = require("apollo-server"); //구문법
 import { typeDefs, resolvers } from "./schema";
-import { getUser } from "./users/user.utils";
+import { getUser } from "./users/users.utils";
 
 import express from "express";
 import { ApolloServer } from "apollo-server-express";
