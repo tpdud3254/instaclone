@@ -23,4 +23,28 @@ model User {
   following User[]   @relation("FollowRelation")
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
+  photo     Photo[]
+}
+
+//photo     Photo[], user      User는 실제 데이터베이스에 저장되지 않음, 실제로 저장되는건 Photo의 userId임
+//이부분은 단지 prisma와 prisma client가 우리가 뭘하는지 알기 위해서 있는 거
+model Photo {
+  id        Int      @id @default(autoincrement())
+  user      User     @relation(fields: [userId], references: [id])
+  userId    Int
+  // 한명의 유저는 여러장의 photo를 가질 수 있음, 관계를 명시해주고 저장하면 그 뒤에는 자동완성 해줌
+  file      String
+  caption   String?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  Hashtags  Hashtag? @relation(fields: [hashtagId], references: [id])
+  hashtagId Int?
+}
+
+model Hashtag {
+  id        Int      @id @default(autoincrement())
+  hasgtag   String
+  photos    Photo[]
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 }
