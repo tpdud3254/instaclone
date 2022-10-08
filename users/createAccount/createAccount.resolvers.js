@@ -23,7 +23,7 @@ export default {
 
                 //hash password
                 const hashedPassword = await bcrypt.hash(password, 10);
-
+                // 10 : hashing salt, hashing paper => rainbow attack 떄문에 넣어줌
                 //save and return the user
                 // return client.user.create({
                 //     data: {

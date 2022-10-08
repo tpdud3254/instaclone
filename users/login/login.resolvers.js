@@ -7,7 +7,7 @@ export default {
         login: async (__, { userName, password }) => {
             // Find user with args.userName
             const user = await client.user.findFirst({ where: { userName } });
-
+            // 조건에 맞는 첫번째 사용자(결과)를 리턴
             if (!user) {
                 return {
                     ok: false,
