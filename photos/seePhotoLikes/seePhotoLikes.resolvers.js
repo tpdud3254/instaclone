@@ -13,7 +13,7 @@ export default {
             });
             return likes.map((like) => like.user);
         },
-
+        // TODO: pagination 추가
         /*
             select와 include의 차이점
             include : 결과에 relationship을 추가
