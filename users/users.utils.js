@@ -28,10 +28,19 @@ export const getUser = async (token) => {
 //function-oriented programming, functional programming
 export const protectedResolver = (resolver) => (root, args, context, info) => {
     if (!context.loggedInUser) {
-        return {
-            ok: false,
-            error: "Please login to perform this action",
-        };
+        /*
+        seefeed 같은 경우는 반환값으로 [Photo]를 예상하고 있으니 ok, error를 반환하면 에러가남
+        방어코드
+        */
+        const query = info.operation.operation === "query";
+        if (query) {
+            return null;
+        } else {
+            return {
+                ok: false,
+                error: "Please login to perform this action",
+            };
+        }
     }
     return resolver(root, args, context, info);
 };
