@@ -38,7 +38,7 @@ export default {
 
             // return Boolean(exists)
         },
-        photos: ({ id }) => client.user.findUnique({ where: { id } }).photos(), //pagenation 추가
+        photos: ({ id }) => client.user.findUnique({ where: { id } }).photos(), //TODO: pagenation 추가
     },
 };
 
