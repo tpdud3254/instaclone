@@ -27,6 +27,7 @@ Instaclone Backend.
 -   See Photo Like
 -   See Photo Commnets
 -   See Feed
+-   See Photo
 -   Delete Photo (isMine)
 
 ## Comments
