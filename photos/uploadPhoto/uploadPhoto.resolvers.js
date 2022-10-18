@@ -1,5 +1,6 @@
 import client from "../../client";
 import { protectedResolver } from "../../users/users.utils";
+import { processHashtags } from "../photos.utils";
 
 export default {
     Mutation: {
@@ -10,13 +11,7 @@ export default {
                 if (caption) {
                     // parse caption
                     // regural expression (정규 표혀식) : 패턴을 통해 String내에 있는 특정 stringa을 추출하도록 도와주는 것 (https://www.regexpal.com/)
-                    const hashtags = caption.match(/#[\w]+/g);
-                    hashtagObj = hashtags.map((hashtag) => {
-                        return {
-                            where: { hashtag },
-                            create: { hashtag },
-                        };
-                    });
+                    hashtagObj = processHashtags(caption);
                 }
 
                 // get or create hashtags
