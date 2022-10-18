@@ -25,6 +25,25 @@ export default {
                     },
                 });
 
+                /*
+                이런식으로도 활용 가능 (댓글)
+                const oldPhotosHashtags = await client.photo
+                    .findFirst({
+                        where: {
+                            id,
+                            userId: loggedInUser.id,
+                        },
+                        select: {
+                            hashtags: true,
+                        },
+                    })
+                    .hashtags({
+                        select: {
+                            hashtag: true,
+                        },
+                    });
+                */
+
                 if (!prevPhoto) {
                     return {
                         ok: false,

@@ -24,6 +24,7 @@ model User {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
   photos    Photo[]
+  likes     Like[]
 }
 
 //photo     Photo[], user      User는 실제 데이터베이스에 저장되지 않음, 실제로 저장되는건 Photo의 userId임
@@ -40,6 +41,7 @@ model Photo {
   updatedAt DateTime  @updatedAt
   hashtags  Hashtag[]
   hashtagId Int?
+  likes     Like[]
 }
 
 model Hashtag {
@@ -49,3 +51,20 @@ model Hashtag {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 }
+
+model Like {
+  id        Int      @id @default(autoincrement())
+  photo     Photo    @relation(fields: [photoId], references: [id])
+  user      User     @relation(fields: [userId], references: [id])
+  photoId   Int
+  userId    Int
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  //photoID, userID는 DB에 저장 되지만 photo, user는 아님. photo, user는 prisma만을 위해 만들어진 항목임
+
+  @@unique([photoId, userId])
+}
+
+//unique가 필요한 이유? 유저가 똑같은 사진에 좋아요를 한 번 이상 못누르게 하기 위해서. userIddhk photoId는 중복될 수 없음 
+//protected의 역할도 해줌. userId와 photoID가 중복되 경우 DB에 저장되지 않도록 해줌
