@@ -7,6 +7,7 @@ import { getUser } from "./users/users.utils";
 import express from "express";
 import { ApolloServer } from "apollo-server-express";
 import graphqlUploadExpress from "graphql-upload/graphqlUploadExpress.js";
+const bodyParser = require("body-parser");
 
 // const server = new ApolloServer({
 //     typeDefs,
@@ -34,7 +35,7 @@ async function startServer() {
                 loggedInUser: await getUser(req.headers.token),
             };
         },
-        csrfPrevention: true,
+        csrfPrevention: false,
     });
 
     await apollo.start();

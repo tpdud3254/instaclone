@@ -24,6 +24,7 @@
         "@graphql-tools/schema": "^9.0.4",
         "@prisma/client": "^4.3.1",
         "apollo-server": "^3.10.2",
+        "aws-sdk": "^2.1234.0",
         "bcrypt": "^5.0.1",
         "dotenv": "^16.0.2",
         "graphql": "^15.8.0",

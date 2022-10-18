@@ -3,6 +3,7 @@ import client from "../../client";
 import bcypt from "bcrypt";
 import { protectedResolver } from "../users.utils";
 import GraphQLUpload from "graphql-upload/GraphQLUpload.js";
+import { uploadToS3 } from "../../shared/shared.utils";
 const resolverFn = async (
     __,
     {
@@ -18,15 +19,17 @@ const resolverFn = async (
 ) => {
     let avatarUrl = null;
     if (avatar) {
-        const { filename, createReadStream } = await avatar;
-        const newFileName = `${loggedInUser.id}-${Date.now()}-${filename}`; //파일명을 유니크하게 만들어 주기 위해
-        const readStream = createReadStream();
-        const writeStream = createWriteStream(
-            process.cwd() + "/uploads/" + newFileName
-        );
+        avatarUrl = await uploadToS3(avatar, loggedInUser.id, "avatars");
 
-        readStream.pipe(writeStream);
-        avatarUrl = `http://localhost:4000/static/${newFileName}`;
+        // const { filename, createReadStream } = await avatar;
+        // const newFileName = `${loggedInUser.id}-${Date.now()}-${filename}`; //파일명을 유니크하게 만들어 주기 위해
+        // const readStream = createReadStream();
+        // const writeStream = createWriteStream(
+        //     process.cwd() + "/uploads/" + newFileName
+        // );
+
+        // readStream.pipe(writeStream);
+        // avatarUrl = `http://localhost:4000/static/${newFileName}`;
     }
 
     let hashedPassword = null;

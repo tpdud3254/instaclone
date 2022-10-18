@@ -1,8 +1,11 @@
 import client from "../../client";
+import { uploadToS3 } from "../../shared/shared.utils";
 import { protectedResolver } from "../../users/users.utils";
+import GraphQLUpload from "graphql-upload/GraphQLUpload.js";
 import { processHashtags } from "../photos.utils";
 
 export default {
+    Upload: GraphQLUpload,
     Mutation: {
         uploadPhoto: protectedResolver(
             async (__, { file, caption }, { loggedInUser }) => {
@@ -14,12 +17,18 @@ export default {
                     hashtagObj = processHashtags(caption);
                 }
 
+                const fileUrl = await uploadToS3(
+                    file,
+                    loggedInUser.id,
+                    "uploads"
+                );
+
                 // get or create hashtags
                 // save the photo with the parsed hashtags
                 // add the photo to the hasgtags
                 return client.photo.create({
                     data: {
-                        file,
+                        file: fileUrl,
                         caption,
                         user: {
                             connect: {
