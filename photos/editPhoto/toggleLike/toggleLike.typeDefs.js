@@ -7,11 +7,7 @@ photo에 like항목을 그냥 추가하게 되면 우린 유저가 좋아요 누
 어떤 유저가 좋아요를 눌렀는지 볼 수 없게 됨
 */
 export default gql`
-    type ToggleLikeResult {
-        ok: Boolean!
-        error: String
-    }
     type Mutation {
-        toggleLike(id: Int!): ToggleLikeResult!
+        toggleLike(id: Int!): MutationResponse!
     }
 `;
