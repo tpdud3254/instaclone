@@ -2,10 +2,10 @@ import client from "../../client";
 
 export default {
     Query: {
-        seePhotoCommnents: (_, { id }) =>
+        seePhotoComments: (_, { id }) =>
             client.comment.findMany({
                 where: {
-                    photoID: id,
+                    photoId: id,
                 },
                 orderBy: {
                     createdAt: "asc",
