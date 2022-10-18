@@ -11,20 +11,21 @@ datasource db {
 }
 
 model User {
-  id        Int      @id @default(autoincrement())
+  id        Int       @id @default(autoincrement())
   firstName String
   lastName  String?
-  userName  String   @unique
-  email     String   @unique
+  userName  String    @unique
+  email     String    @unique
   password  String
   bio       String?
   avatar    String?
-  followers User[]   @relation("FollowRelation")
-  following User[]   @relation("FollowRelation")
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  followers User[]    @relation("FollowRelation")
+  following User[]    @relation("FollowRelation")
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
   photos    Photo[]
   likes     Like[]
+  comments  Comment[]
 }
 
 //photo     Photo[], user      User는 실제 데이터베이스에 저장되지 않음, 실제로 저장되는건 Photo의 userId임
@@ -42,6 +43,7 @@ model Photo {
   hashtags  Hashtag[]
   hashtagId Int?
   likes     Like[]
+  comments  Comment[]
 }
 
 model Hashtag {
@@ -68,3 +70,14 @@ model Like {
 
 //unique가 필요한 이유? 유저가 똑같은 사진에 좋아요를 한 번 이상 못누르게 하기 위해서. userIddhk photoId는 중복될 수 없음 
 //protected의 역할도 해줌. userId와 photoID가 중복되 경우 DB에 저장되지 않도록 해줌
+
+model Comment {
+  id        Int      @id @default(autoincrement())
+  user      User     @relation(fields: [userId], references: [id])
+  photo     Photo    @relation(fields: [photoId], references: [id])
+  payload   String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  userId    Int
+  photoId   Int
+}
