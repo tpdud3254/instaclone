@@ -5,12 +5,13 @@ export default {
     Mutation: {
         sendMessage: protectedResolver(
             async (_, { payload, roomId, userId }, { loggedInUser }) => {
+                //TODO: 서로 팔로우중인지 아님 한쪽만 팔로우 중인지 체크도 해볼 수 있음
                 let room = null;
                 if (userId) {
                     //user check
                     const user = await client.user.findUnique({
                         where: { id: userId },
-                        select: { id: ture },
+                        select: { id: true },
                     });
 
                     if (!user) {
@@ -37,7 +38,7 @@ export default {
                         where: {
                             id: roomId,
                         },
-                        select: { id: ture },
+                        select: { id: true },
                     });
 
                     if (!room) {
