@@ -50,5 +50,5 @@ Instaclone Backend.
 -   Send Message (Create Room)
 -   See Room
 -   Computed Fields
--   See Message
+-   See(Read) Message
 -   Realtime Message

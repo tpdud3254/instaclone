@@ -11,6 +11,23 @@ export default {
             }),
         //TODO: pagination 추가
         //위에 방법 둘다 똑같은데 밑에는 pagination을 할 수 있음
-        unreadTotal: () => 0,
+        unreadTotal: async ({ id }, _, { loggedInUser }) => {
+            if (!loggedInUser) {
+                return 0;
+            }
+
+            await client.message.count({
+                where: {
+                    read: false,
+                    roomId: id,
+                    user: {
+                        id: {
+                            not: loggedInUser.id,
+                        },
+                    },
+                },
+                //읽지 않고, 대화하는 방에, 내가 보낸 메세지가 아닌 경우에..
+            });
+        },
     },
 };
