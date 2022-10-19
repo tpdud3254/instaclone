@@ -32,5 +32,6 @@ export default {
     },
     Message: {
         user: ({ id }) => client.message.findUnique({ where: { id } }).user(),
+        //TODO: 삭제기능도 구현할수있음
     },
 };
