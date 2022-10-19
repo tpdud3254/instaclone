@@ -1,12 +1,12 @@
 import client from "../../client";
 import { NEW_MESSAGE } from "../../constants";
 import pubsub from "../../pubsub";
-import { protectedResolver } from "../../users/users.utils";
+import { getUser, protectedResolver } from "../../users/users.utils";
 
 export default {
     Mutation: {
         sendMessage: protectedResolver(
-            async (_, { payload, roomId, userId }, { loggedInUser }) => {
+            async (_, { payload, roomId, userId }, { loggedInUser, token }) => {
                 //TODO: 서로 팔로우중인지 아님 한쪽만 팔로우 중인지 체크도 해볼 수 있음
                 let room = null;
                 if (userId) {

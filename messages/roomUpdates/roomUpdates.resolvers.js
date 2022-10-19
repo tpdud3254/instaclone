@@ -7,8 +7,12 @@ export default {
     Subscription: {
         roomUpdates: {
             subscribe: async (root, args, context, info) => {
-                const room = await client.room.findUnique({
-                    where: { id: args.id },
+                console.log(context);
+                const room = await client.room.findFirst({
+                    where: {
+                        id: args.id,
+                        users: { some: { id: context.loggedInUser.id } },
+                    },
                     select: { id: true },
                 });
 
@@ -18,8 +22,27 @@ export default {
 
                 return withFilter(
                     () => pubsub.asyncIterator(NEW_MESSAGE), //trigger(string)들을 listen함
-                    ({ roomUpdates }, { id }) => {
-                        return roomUpdates.roomId === id;
+                    async ({ roomUpdates }, { id }, { loggedInUser }) => {
+                        //굳이 해줄 필요는 없지만 user가 listen중에 대화방을 나갈경우를 대비해,..
+                        if (roomUpdates.roomId === id) {
+                            const room = await client.room.findFirst({
+                                where: {
+                                    id,
+                                    users: {
+                                        some: {
+                                            id: loggedInUser.id,
+                                        },
+                                    },
+                                },
+                                select: {
+                                    id: true,
+                                },
+                            });
+                            if (!room) {
+                                return false;
+                            }
+                            return true;
+                        }
                     }
                 )(root, args, context, info);
             },

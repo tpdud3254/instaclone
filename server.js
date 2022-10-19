@@ -33,31 +33,43 @@ import { useServer } from "graphql-ws/lib/use/ws";
 //     .listen(PORT)
 //     .then(() => console.log(`Server is running on http://localhost:${PORT}`));
 
+const PORT = process.env.PORT;
+
 async function startServer() {
     //apllo server는 할수 있는게 제한적이라서 express server를 만들고 apollo server에 추가할거임
     const app = express();
-
-    app.use(graphqlUploadExpress());
-    app.use("/static", express.static("uploads")); //uploads폴더를 인터넷에 올림
     const httpServer = createServer(app);
+    const schema = makeExecutableSchema({ typeDefs, resolvers });
 
     // Creating the WebSocket server
     const wsServer = new WebSocketServer({
         server: httpServer,
         path: "/graphql",
     });
-
-    const schema = makeExecutableSchema({ typeDefs, resolvers });
-
-    const serverCleanup = useServer({ schema }, wsServer);
+    const serverCleanup = useServer(
+        {
+            schema,
+            context: async (param) => {
+                if (!param.connectionParams?.token) {
+                    throw new Error("You can't listen.");
+                }
+                return {
+                    loggedInUser: await getUser(param.connectionParams.token),
+                };
+            },
+        },
+        wsServer
+    );
 
     const apollo = new ApolloServer({
         typeDefs,
         resolvers,
-        context: async ({ req }) => {
+        context: async (ctx) => {
             return {
-                loggedInUser: await getUser(req.headers.token),
+                loggedInUser: await getUser(ctx.req.headers.token),
             };
+            // } else {
+            // }
         },
         csrfPrevention: false,
         plugins: [
@@ -80,9 +92,11 @@ async function startServer() {
 
     await apollo.start();
 
+    app.use(graphqlUploadExpress());
+    app.use("/static", express.static("uploads")); //uploads폴더를 인터넷에 올림
+
     apollo.applyMiddleware({ app });
 
-    const PORT = 4000;
     await new Promise((r) => httpServer.listen(PORT, r));
 
     console.log(
