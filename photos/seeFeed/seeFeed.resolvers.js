@@ -6,7 +6,7 @@ import { protectedResolver } from "../../users/users.utils";
 export default {
     Query: {
         seeFeed: protectedResolver(
-            (_, __, { loggedInUser }) =>
+            (_, { offset }, { loggedInUser }) =>
                 client.photo.findMany({
                     where: {
                         OR: [
@@ -25,6 +25,10 @@ export default {
                     orderBy: {
                         createdAt: "desc",
                     },
+                    take: 2,
+                    skip: offset,
+                    // skip: lastId ? 1 : 0,
+                    // ...(lastId && { cursor: { id: lastId } }),
                 }) //TODO: pagination 추가
         ),
     },
