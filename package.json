@@ -2,6 +2,9 @@
     "name": "instaclone",
     "version": "1.0.0",
     "description": "",
+    "engines": {
+        "node": "18.x"
+    },
     "scripts": {
         "dev": "nodemon --exec babel-node src/server",
         "migrate": "npx prisma migrate dev --preview-feature",
